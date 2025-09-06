@@ -59,23 +59,26 @@ python3 -m venv venv
 
 # Mengaktifkan virtual environment
 # Di Windows:
+```
 .\venv\Scripts\activate
+```
 # Di MacOS/Linux:
+```
 source venv/bin/activate
-
+```
 Langkah 4: Instal Dependensi
 
 Dengan lingkungan virtual yang aktif, instal library yang diperlukan menggunakan file requirements.txt:
-
+```
 pip install -r requirements.txt
-
+```
 Perintah ini akan secara otomatis menginstal pygame versi 2.6.1.
 
 6. Cara Menjalankan Program
 Setelah instalasi selesai, jalankan program utama dari terminal:
-
+```
 python3 MMAISudokuSolver.py
-
+```
 Sebuah jendela aplikasi akan muncul di layar Anda.
 
 7. Cara Menggunakan Aplikasi
