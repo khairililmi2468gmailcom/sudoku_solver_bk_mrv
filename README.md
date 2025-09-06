@@ -1,30 +1,10 @@
 MMAI Sudoku Solver
 1. Deskripsi Proyek
 MMAI Sudoku Solver adalah sebuah aplikasi desktop yang dikembangkan sebagai bagian dari tugas mata kuliah MMAI1001 - Kecerdasan Artifisial. Program ini dirancang untuk menyelesaikan teka-teki Sudoku 9x9 dari berbagai tingkat kesulitan secara instan.
-
-Aplikasi ini tidak hanya menemukan solusi, tetapi juga menyediakan antarmuka grafis (GUI) yang interaktif bagi pengguna untuk memuat puzzle, memicu proses penyelesaian, dan menganalisis performa algoritma yang digunakan.
-
 2. Fitur Utama
 Solver Super Cepat: Mengimplementasikan algoritma Backtracking yang dioptimalkan dengan Heuristik Minimum Remaining Values (MRV) dan representasi data Bitmask, mampu menyelesaikan puzzle tingkat ekstrem dalam hitungan milidetik.
-
-Antarmuka Grafis Interaktif: GUI yang dibangun dengan Pygame memungkinkan pengguna berinteraksi secara visual dengan program.
-
-Berbagai Tingkat Kesulitan: Dilengkapi dengan 5 level puzzle (Mudah, Menengah, Sulit, Ahli, Ekstrem) yang dapat dimuat dengan sekali klik.
-
-Fungsionalitas Reset: Tombol "Reset" memungkinkan pengguna untuk mengembalikan papan ke kondisi awal setelah diselesaikan.
-
-Analisis Kinerja: Menampilkan waktu eksekusi (runtime) yang akurat dalam milidetik untuk setiap proses penyelesaian.
-
-Input & Output File: Membaca puzzle dari file .txt dan menyimpan solusinya ke SolusiSudoku.txt.
-
-3. Algoritma yang Digunakan
+4. Algoritma yang Digunakan
 Proyek ini menggunakan algoritma Backtracking dengan Heuristik MRV & Bitmask.
-
-Bitmask: Kandidat angka (1-9) yang valid untuk setiap baris, kolom, dan kotak 3x3 direpresentasikan sebagai bitvector (sebuah integer). Ini memungkinkan pengecekan validitas kandidat dilakukan dengan operasi bitwise (|, &, ~) yang sangat cepat, jauh lebih efisien daripada iterasi list atau set.
-
-Minimum Remaining Values (MRV): Daripada mencoba sel kosong secara berurutan, algoritma ini secara cerdas memilih sel yang memiliki jumlah kandidat paling sedikit. Strategi "fail-fast" ini secara drastis memangkas cabang pencarian yang tidak perlu dieksplorasi, menghasilkan peningkatan performa yang masif.
-
-Kombinasi kedua teknik ini menghasilkan solver yang sangat efisien dan mampu bersaing dengan solver Sudoku modern.
 
 4. Struktur Proyek
 Pastikan semua file berikut berada dalam satu direktori yang sama:
