@@ -28,7 +28,6 @@ Kombinasi kedua teknik ini menghasilkan solver yang sangat efisien dan mampu ber
 
 4. Struktur Proyek
 Pastikan semua file berikut berada dalam satu direktori yang sama:
-
 .
 ├── MMAISudokuSolver.py       # <-- File utama program
 ├── puzzle_mudah.txt          # <-- Contoh puzzle
@@ -37,6 +36,7 @@ Pastikan semua file berikut berada dalam satu direktori yang sama:
 ├── puzzle_ahli.txt
 ├── puzzle_ekstrem.txt
 └── requirements.txt          # <-- File dependensi Python
+
 
 5. Panduan Instalasi dan Setup
 Untuk menjalankan proyek ini di komputer Anda, ikuti langkah-langkah berikut:
