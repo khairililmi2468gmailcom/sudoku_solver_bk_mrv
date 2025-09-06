@@ -55,8 +55,9 @@ Langkah 3: Buat Lingkungan Virtual (Direkomendasikan)
 Buka terminal atau command prompt, arahkan ke folder proyek, dan jalankan:
 
 # Membuat virtual environment
+```
 python3 -m venv venv
-
+```
 # Mengaktifkan virtual environment
 # Di Windows:
 ```
