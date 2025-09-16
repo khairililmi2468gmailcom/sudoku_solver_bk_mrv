@@ -13,9 +13,11 @@ Berbagai Tingkat Kesulitan: Dilengkapi dengan 5 level puzzle (Mudah, Menengah, S
 
 Fungsionalitas Reset: Tombol "Reset" memungkinkan pengguna untuk mengembalikan papan ke kondisi awal setelah diselesaikan.
 
-Analisis Kinerja: Menampilkan waktu eksekusi (runtime) yang akurat dalam milidetik untuk setiap proses penyelesaian.
+Fungsionalitas Kosongkan: Tombol "Kosongkan" dapat untuk membuat papan ke kondisi kosong tanpa ada nilai 
 
-Input & Output File: Membaca puzzle dari file .txt dan menyimpan solusinya ke SolusiSudoku.txt.
+Time Inference: Menampilkan waktu eksekusi (runtime) yang akurat dalam milidetik untuk setiap proses penyelesaian.
+
+Input & Output File: Membaca puzzle dari file .txt dan menyimpan solusinya ke SolusiSudoku.txt, serta dapat mengisi angka awal langsung di GUI.
 
 3. Algoritma yang Digunakan
 Proyek ini menggunakan algoritma Backtracking dengan Heuristik MRV & Bitmask.
@@ -28,16 +30,17 @@ Kombinasi kedua teknik ini menghasilkan solver yang sangat efisien dan mampu ber
 
 4. Struktur Proyek
 Pastikan semua file berikut berada dalam satu direktori yang sama:
-
+```bash
 .
-├── MMAISudokuSolver.py       # <-- File utama program
-├── puzzle_mudah.txt          # <-- Contoh puzzle
+├── MMAISudokuSolver.py       # File utama program dengan input GUI
+├── sudokusolver.py           # File program tanpa input GUI   
+├── puzzle_mudah.txt          # Contoh puzzle
 ├── puzzle_menengah.txt
 ├── puzzle_sulit.txt
 ├── puzzle_ahli.txt
 ├── puzzle_ekstrem.txt
-└── requirements.txt          # <-- File dependensi Python
-
+└── requirements.txt          # File dependensi Python
+```
 5. Panduan Instalasi dan Setup
 Untuk menjalankan proyek ini di komputer Anda, ikuti langkah-langkah berikut:
 
@@ -47,12 +50,12 @@ Pastikan Python 3.8 atau versi yang lebih baru telah terinstal.
 
 Langkah 2: Dapatkan Kode Proyek
 
-Unduh atau clone repositori ini ke mesin lokal Anda.
+Unduh atau clone repositori ini ke lokal.
 
 Langkah 3: Buat Lingkungan Virtual (Direkomendasikan)
 
 Buka terminal atau command prompt, arahkan ke folder proyek, dan jalankan:
-
+```bash
 # Membuat virtual environment
 python3 -m venv venv
 
@@ -61,21 +64,22 @@ python3 -m venv venv
 .\venv\Scripts\activate
 # Di MacOS/Linux:
 source venv/bin/activate
-
+```
 Langkah 4: Instal Dependensi
 
 Dengan lingkungan virtual yang aktif, instal library yang diperlukan menggunakan file requirements.txt:
-
+```bash
 pip install -r requirements.txt
-
+```
 Perintah ini akan secara otomatis menginstal pygame versi 2.6.1.
 
 6. Cara Menjalankan Program
 Setelah instalasi selesai, jalankan program utama dari terminal:
-
+```bash
 python3 MMAISudokuSolver.py
-
+```
 Sebuah jendela aplikasi akan muncul di layar Anda.
+![Papan Sudoku](assets/sudoku_board.png)
 
 7. Cara Menggunakan Aplikasi
 Memuat Puzzle: Klik salah satu dari lima tombol tingkat kesulitan di bagian bawah ("Mudah", "Menengah", dst.) untuk memuat puzzle ke papan.
