@@ -80,7 +80,7 @@ python3 MMAISudokuSolver.py
 ```
 Sebuah jendela aplikasi akan muncul di layar Anda.
 <p align="center">
-  <img src="/assets/sudoku_board.png" alt="Ilustrasi Papan Sudoku" width="600" />
+  <img src="/assets/sudoku_board.png" alt="Ilustrasi Papan Sudoku" width="300" />
 </p>
 7. Cara Menggunakan Aplikasi
 Memuat Puzzle: Klik salah satu dari lima tombol tingkat kesulitan di bagian bawah ("Mudah", "Menengah", dst.) untuk memuat puzzle ke papan.
