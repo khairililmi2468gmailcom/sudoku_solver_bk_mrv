@@ -20,7 +20,7 @@ INITIAL_NUMBER_COLOR = (0, 0, 0)
 SOLVED_NUMBER_COLOR = (100, 100, 100)
 USER_NUMBER_COLOR = (0, 0, 200)
 INVALID_NUMBER_COLOR = (255, 0, 0)
-RUNTIME_TEXT_COLOR = (50, 50, 50)
+UI_TEXT_COLOR = (50, 50, 50)
 STATUS_SUCCESS_COLOR = (0, 150, 0)
 STATUS_FAIL_COLOR = (200, 0, 0)
 # UI Lainnya
@@ -35,7 +35,8 @@ FONT = pygame.font.SysFont("comicsans", 40)
 FONT_MEDIUM = pygame.font.SysFont("comicsans", 20)
 FONT_SMALL = pygame.font.SysFont("comicsans", 16)
 FONT_STATUS = pygame.font.SysFont("comicsans", 16)
-FONT_RUNTIME = pygame.font.SysFont("comicsans", 18)
+FONT_UI_TEXT = pygame.font.SysFont("comicsans", 20, bold=True)
+
 
 # Konstanta File & Bitmask
 ALL_CANDIDATES = 0x1FF
@@ -50,6 +51,11 @@ class SudokuSolver:
         self.buttons = self.create_buttons()
         self.status_text, self.status_color, self.status_timer = "", STATUS_SUCCESS_COLOR, 0
         self.current_puzzle_name = "papan custom"
+        # State untuk Stopwatch Permainan
+        self.game_active = False
+        self.game_start_time = 0
+        self.game_elapsed_time = 0
+        
         self.initial_board, self.board, self.invalid_cells = [0]*81, [0]*81, set()
         self.rows, self.cols, self.boxes = [0]*9, [0]*9, [0]*9
         self.clear_board(is_initial_load=True)
@@ -59,9 +65,13 @@ class SudokuSolver:
         self.status_color = STATUS_SUCCESS_COLOR if success else STATUS_FAIL_COLOR
         self.status_timer = time.time() + duration
 
+    def start_game_timer(self):
+        """Memulai atau mereset stopwatch permainan."""
+        self.game_active = True
+        self.game_start_time = time.time()
+
     def create_buttons(self):
         buttons = {}
-        # Tombol Level
         puzzle_files = { "Mudah": "puzzle_mudah.txt", "Menengah": "puzzle_menengah.txt", "Sulit": "puzzle_sulit.txt", "Ahli": "puzzle_ahli.txt", "Ekstrem": "puzzle_ekstrem.txt" }
         btn_width, btn_height, btn_padding = 90, 35, 15
         start_x_levels = (SCREEN_WIDTH - (len(puzzle_files) * btn_width + (len(puzzle_files) - 1) * btn_padding)) // 2
@@ -70,9 +80,8 @@ class SudokuSolver:
             x_pos = start_x_levels + i * (btn_width + btn_padding)
             buttons[name] = {'rect': pygame.Rect(x_pos, y_pos_levels, btn_width, btn_height), 'file': filename, 'action': 'load'}
             
-        # Tombol Aksi (Solve, Reset, Kosongkan)
         action_btn_width, action_btn_height = 120, 50
-        total_width_actions = 3 * action_btn_width + 2 * btn_padding # 3 tombol
+        total_width_actions = 3 * action_btn_width + 2 * btn_padding
         action_start_x = (SCREEN_WIDTH - total_width_actions) // 2
         y_pos_actions = y_pos_levels + btn_height + 20
         buttons["Solve"] = {'rect': pygame.Rect(action_start_x, y_pos_actions, action_btn_width, action_btn_height), 'action': 'solve'}
@@ -86,6 +95,7 @@ class SudokuSolver:
         self.reset_state()
         if not is_initial_load:
             self.set_status("Papan dikosongkan, siap untuk input baru.")
+        self.start_game_timer()
     
     def is_board_valid(self, board_to_check):
         self.invalid_cells.clear()
@@ -125,6 +135,7 @@ class SudokuSolver:
             self.current_puzzle_name = filename.split('/')[-1]
             self.reset_state()
             self.set_status(f"Puzzle '{self.current_puzzle_name}' dimuat.")
+            self.start_game_timer()
         except Exception as e:
             print(f"Error memuat file {filename}: {e}")
             self.clear_board()
@@ -135,6 +146,9 @@ class SudokuSolver:
         self.solved = False; self.is_solving = False
         self.runtime = None; self.selected_cell = None
         self.is_board_valid(self.board)
+        # Saat reset, timer permainan juga direset
+        if self.current_puzzle_name != "papan custom":
+            self.start_game_timer()
 
     def write_solution(self, filename):
         print(f"Menyimpan papan ke '{filename}'...")
@@ -188,11 +202,23 @@ class SudokuSolver:
             text = font.render(name, True, BUTTON_TEXT_COLOR)
             self.screen.blit(text, (rect.x+(rect.width-text.get_width())/2, rect.y+(rect.height-text.get_height())/2))
         
+        # --- TATA LETAK BARU UNTUK WAKTU ---
+        y_pos_timers = self.buttons['Solve']['rect'].bottom + 30
+
+        # 1. Stopwatch Permainan (Kiri)
+        if self.game_active:
+            self.game_elapsed_time = time.time() - self.game_start_time
+        
+        minutes = int(self.game_elapsed_time // 60)
+        seconds = int(self.game_elapsed_time % 60)
+        timer_text = FONT_UI_TEXT.render(f"Waktu: {minutes:02d}:{seconds:02d}", True, UI_TEXT_COLOR)
+        self.screen.blit(timer_text, (40, y_pos_timers))
+        
+        # 2. Runtime Presisi (Kanan)
         if self.runtime is not None:
-            text = FONT_RUNTIME.render(f"Runtime: {self.runtime:.4f} ms", True, RUNTIME_TEXT_COLOR)
-            y_pos_runtime = self.buttons['Solve']['rect'].bottom + 30
-            text_rect = text.get_rect(center=(SCREEN_WIDTH/2, y_pos_runtime))
-            self.screen.blit(text, text_rect)
+            runtime_str = f"Runtime: {self.runtime:.4f} ms"
+            text = FONT_UI_TEXT.render(runtime_str, True, UI_TEXT_COLOR)
+            self.screen.blit(text, (SCREEN_WIDTH - text.get_width() - 40, y_pos_timers))
 
     def solve(self):
         self.initial_board = self.board[:]
@@ -239,7 +265,9 @@ class SudokuSolver:
                             if btn['rect'].collidepoint(pos):
                                 action = btn.get('action')
                                 if action=='load': self.load_grid(btn['file'])
-                                elif action=='reset': self.reset_state(); self.set_status(f"Papan direset ke puzzle '{self.current_puzzle_name}'.")
+                                elif action=='reset':
+                                    self.reset_state()
+                                    self.set_status(f"Papan direset ke '{self.current_puzzle_name}'.")
                                 elif action=='clear': self.clear_board()
                                 elif action=='solve' and not self.solved:
                                     if sum(self.board) == 0:
@@ -247,24 +275,31 @@ class SudokuSolver:
                                     if self.invalid_cells:
                                         messagebox.showerror("Error", "Papan tidak valid (ada angka merah)."); continue
                                     self.is_solving=True; self.draw_all(); pygame.event.pump()
-                                    start=time.perf_counter()
+                                    start_perf=time.perf_counter()
                                     solution_found = self.solve()
-                                    end=time.perf_counter()
+                                    end_perf=time.perf_counter()
+                                    
                                     if solution_found:
-                                        self.runtime=(end-start)*1000
+                                        self.runtime=(end_perf-start_perf)*1000
                                         self.write_solution(OUTPUT_FILENAME); self.solved=True
+                                        self.game_active = False # Hentikan stopwatch permainan
                                         self.set_status(f"Solusi untuk '{self.current_puzzle_name}' disimpan ke file '{OUTPUT_FILENAME}'")
                                     else:
+                                        self.runtime = None
                                         self.set_status(f"Gagal: Tidak ada solusi untuk '{self.current_puzzle_name}'.", success=False)
                                         self.board = self.board_before_solve[:]; self.is_board_valid(self.board)
                                     self.is_solving=False
+                                    
                 if event.type == pygame.KEYDOWN and self.selected_cell and not self.solved:
                     r,c=self.selected_cell; idx=r*9+c
+                    if not self.game_active: self.start_game_timer() # Mulai timer saat angka pertama dimasukkan
+                    
                     if self.initial_board[idx]==0:
                         if pygame.K_1<=event.key<=pygame.K_9: self.board[idx]=event.key-pygame.K_0
                         elif event.key in [pygame.K_BACKSPACE, pygame.K_DELETE]: self.board[idx]=0
                         self.solved=False; self.runtime=None; self.is_board_valid(self.board)
-                        self.current_puzzle_name="papan custom"
+                        if self.current_puzzle_name != "papan custom": self.current_puzzle_name="papan editan"
+            
             self.draw_all()
         pygame.quit()
 
